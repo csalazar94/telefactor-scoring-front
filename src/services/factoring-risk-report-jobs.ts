@@ -29,3 +29,28 @@ export const getJob = cache(
     return response.json();
   },
 );
+
+export const createJob = cache(
+  async ({
+    token,
+    job,
+  }: {
+    token: string;
+    job: { rut: string; amount: string };
+  }) => {
+    const response = await fetch(
+      "http://localhost:3000/api/v1/report-builder/factoring-risk-report-jobs",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ rut: job.rut, amount: Number(job.amount) }),
+      },
+    );
+    const data = await response.json();
+    if (!response.ok) throw new Error();
+    return data;
+  },
+);
