@@ -1,16 +1,15 @@
-"use client";
-
 import { getJob, getJobs } from "@/services/factoring-risk-report-jobs";
 import { Button, Flex, Form, Input, Modal, Table } from "antd";
 import {
   useQuery,
   QueryClient,
   QueryClientProvider,
-  useMutation,
 } from "@tanstack/react-query";
-import { useState } from "react";
-import { getToken } from "@/services/auth";
 import { EyeOutlined } from "@ant-design/icons";
+import { redirect } from "next/navigation";
+import { getSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]/route";
 
 type FieldType = {
   rut?: string;
@@ -19,31 +18,30 @@ type FieldType = {
 
 const queryClient = new QueryClient();
 
-export default function Home() {
-  const [token, setToken] = useState();
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      {token ? (
-        <Flex gap="middle" vertical>
-          <Form layout="inline">
-            <Form.Item<FieldType> label="Rut" name="rut">
-              <Input />
-            </Form.Item>
-            <Form.Item<FieldType> label="Monto" name="amount">
-              <Input />
-            </Form.Item>
-            <Button type="primary" htmlType="submit">
-              Generar
-            </Button>
-          </Form>
-          <JobsTable token={token} />
-        </Flex>
-      ) : (
-        <Login setToken={setToken} />
-      )}
-    </QueryClientProvider>
-  );
+export default async function Home() {
+  const session = await getServerSession(authOptions);
+  if (!session) redirect("login");
+  return "home";
+  // <QueryClientProvider client={queryClient}>
+  //   {token ? (
+  //     <Flex gap="middle" vertical>
+  //       <Form layout="inline">
+  //         <Form.Item<FieldType> label="Rut" name="rut">
+  //           <Input />
+  //         </Form.Item>
+  //         <Form.Item<FieldType> label="Monto" name="amount">
+  //           <Input />
+  //         </Form.Item>
+  //         <Button type="primary" htmlType="submit">
+  //           Generar
+  //         </Button>
+  //       </Form>
+  //       <JobsTable token={token} />
+  //     </Flex>
+  //   ) : (
+  //     <Login setToken={setToken} />
+  //   )}
+  // </QueryClientProvider>
 }
 
 interface ReportModalProps {
@@ -148,42 +146,5 @@ function JobsTable({ token }: JobsTableProps) {
         />
       ) : null}
     </div>
-  );
-}
-
-type LoginFieldType = {
-  username?: string;
-  password?: string;
-};
-
-interface LoginProps {
-  setToken: Function;
-}
-
-function Login({ setToken }: LoginProps) {
-  const mutation = useMutation({
-    mutationFn: getToken,
-    onSuccess: (data) => {
-      setToken(data.access_token);
-    },
-  });
-
-  return (
-    <Form
-      layout="vertical"
-      onFinish={({ username, password }) =>
-        mutation.mutate({ username, password })
-      }
-    >
-      <Form.Item<LoginFieldType> label="Usuario" name="username">
-        <Input />
-      </Form.Item>
-      <Form.Item<LoginFieldType> label="Contraseña" name="password">
-        <Input />
-      </Form.Item>
-      <Button type="primary" htmlType="submit">
-        Generar
-      </Button>
-    </Form>
   );
 }
