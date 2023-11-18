@@ -23,8 +23,11 @@ export default function LoginForm() {
       password,
       redirect: false,
     });
-    if (res?.ok) router.push("/");
-    setError("Usuario y/o contraseña incorrecto.");
+    if (res?.ok) {
+      router.push("/");
+    } else {
+      setError("Usuario y/o contraseña incorrecto.");
+    }
     setLoading(false);
   };
 
