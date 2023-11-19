@@ -12,6 +12,6 @@ export const getToken = async ({
     },
     body: JSON.stringify({ username, password }),
   });
-  if (!response.ok) throw new Error();
+  if (!response.ok) throw new Error("Error obtaining token");
   return response.json();
 };

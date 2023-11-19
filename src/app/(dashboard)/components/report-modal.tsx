@@ -4,6 +4,7 @@ import { getJob } from "@/services/factoring-risk-report-jobs";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Modal } from "antd";
 import { useEffect, useState } from "react";
+import { Job } from "./jobs-table";
 
 interface ReportModalProps {
   jobId: string;
@@ -19,7 +20,7 @@ export default function ReportModal({
   setShowModal,
 }: ReportModalProps) {
   const [loading, setLoading] = useState(true);
-  const [job, setJob] = useState();
+  const [job, setJob] = useState<Job>();
 
   useEffect(() => {
     if (!token) return;
@@ -29,9 +30,13 @@ export default function ReportModal({
     });
   }, [token, jobId]);
 
+  if (loading) {
+    return <LoadingOutlined style={{ color: "blue" }} className="text-8xl" />;
+  }
+
   return (
     <Modal
-      title={`Reporte: ${job?.output?.name || "Cargando..."}`}
+      title={`Reporte: ${job!.output?.name}`}
       open={showModal}
       onOk={() => setShowModal(!showModal)}
       onCancel={() => setShowModal(!showModal)}
@@ -42,16 +47,12 @@ export default function ReportModal({
       centered={true}
       footer={false}
     >
-      {loading ? (
-        <LoadingOutlined className="text-6xl" style={{ color: "blue" }} />
-      ) : (
-        <embed
-          src={job?.output?.pdfBase64}
-          type="application/pdf"
-          width="100%"
-          height="100%"
-        />
-      )}
+      <embed
+        src={job!.output?.pdfBase64}
+        type="application/pdf"
+        width="100%"
+        height="100%"
+      />
     </Modal>
   );
 }

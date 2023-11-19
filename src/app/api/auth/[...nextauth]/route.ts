@@ -1,5 +1,4 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
-import { decode } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions: NextAuthOptions = {
@@ -60,7 +59,7 @@ export const authOptions: NextAuthOptions = {
         username: {},
         password: {},
       },
-      async authorize(credentials) {
+      async authorize(credentials): Promise<any> {
         const res = await fetch("http://localhost:3000/api/v1/auth/token", {
           method: "POST",
           body: JSON.stringify({
@@ -80,6 +79,28 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
 };
+
+declare module "next-auth" {
+  interface Session {
+    access_token: string;
+    error?: "RefreshAccessTokenError";
+  }
+
+  interface User {
+    access_token: string;
+    expires_at: number;
+    refresh_token: string;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    access_token: string;
+    expires_at: number;
+    refresh_token: string;
+    error?: "RefreshAccessTokenError";
+  }
+}
 
 const handler = NextAuth(authOptions);
 

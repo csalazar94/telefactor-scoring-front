@@ -7,14 +7,49 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import ReportModal from "./report-modal";
 
+export type Job = {
+  id: string;
+  clientId: string;
+  state: string;
+  error: string;
+  input: {
+    id: string;
+    rut: string;
+    amount: number;
+    webhook: string;
+  };
+  output: {
+    address: string;
+    amount: number;
+    answer: string;
+    companySize: string;
+    date: Date;
+    foundationYear: number;
+    id: string;
+    industryCategory: string;
+    name: string;
+    recommendation: string;
+    rut: string;
+    salesSegment: string;
+    score: number;
+    scoreCategory: string;
+    workersCount: number;
+    pdfBase64: string;
+  };
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export default function JobsTable() {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [jobId, setJobId] = useState();
+  const [jobId, setJobId] = useState("");
   const [jobs, setJobs] = useState([]);
-  const session = useSession();
+  const { data } = useSession({
+    required: true,
+  });
 
-  const access_token = session?.data?.access_token;
+  const access_token = data!.access_token;
 
   const columns = [
     {
@@ -44,7 +79,7 @@ export default function JobsTable() {
     {
       title: "Ver",
       key: "see",
-      render: (_, record) => (
+      render: (_: any, record: Job) => (
         <Button
           onClick={() => {
             setJobId(record.id);
@@ -61,7 +96,7 @@ export default function JobsTable() {
   useEffect(() => {
     if (!access_token) return;
     getJobs(access_token).then((jobs) =>
-      setJobs(jobs.map((j) => ({ ...j, key: j.id }))),
+      setJobs(jobs.map((j: Job) => ({ ...j, key: j.id }))),
     );
     setLoading(false);
   }, [access_token]);

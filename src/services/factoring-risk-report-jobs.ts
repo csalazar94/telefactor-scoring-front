@@ -10,7 +10,7 @@ export const getJobs = cache(async (token: string) => {
       },
     },
   );
-  if (!response.ok) throw new Error();
+  if (!response.ok) throw new Error("Error obtaining jobs");
   return response.json();
 });
 
@@ -25,7 +25,7 @@ export const getJob = cache(
         },
       },
     );
-    if (!response.ok) throw new Error();
+    if (!response.ok) throw new Error("Error obtaining job");
     return response.json();
   },
 );
@@ -50,7 +50,7 @@ export const createJob = cache(
       },
     );
     const data = await response.json();
-    if (!response.ok) throw new Error();
+    if (!response.ok) throw new Error("Error creating job");
     return data;
   },
 );
