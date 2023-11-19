@@ -14,4 +14,4 @@ services:
 
 networks:
   telefactor-network:
-    external:
+    external: true
