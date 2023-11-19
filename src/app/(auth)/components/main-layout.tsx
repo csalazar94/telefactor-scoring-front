@@ -17,7 +17,10 @@ export default function MainLayout({
   if (status === "loading") {
     return (
       <div className="flex justify-center content-center min-h-screen">
-        <LoadingOutlined className="text-8xl" style={{ color: "blue" }} />
+        <LoadingOutlined
+          className="text-8xl h-full self-center"
+          style={{ color: "blue" }}
+        />
       </div>
     );
   }

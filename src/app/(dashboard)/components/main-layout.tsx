@@ -1,11 +1,12 @@
 "use client";
 
 import { LoadingOutlined } from "@ant-design/icons";
-import { Button, Layout, Menu } from "antd";
+import { Layout, Menu } from "antd";
 import { signOut, useSession } from "next-auth/react";
 import { redirect, usePathname } from "next/navigation";
+import type { MenuProps } from "antd";
 
-const { Sider, Content, Header } = Layout;
+const { Sider, Content } = Layout;
 
 export default function MainLayout({
   children,
@@ -20,17 +21,27 @@ export default function MainLayout({
   });
   const pathname = usePathname();
 
-  const items = [
+  const items: MenuProps["items"] = [
     {
       key: "/dashboard",
       label: "Dashboard",
+    },
+    {
+      type: "divider",
+    },
+    {
+      key: "/logout",
+      label: "Cerrar sesión",
     },
   ];
 
   if (status === "loading") {
     return (
       <div className="flex justify-center content-center min-h-screen">
-        <LoadingOutlined className="text-8xl" style={{ color: "blue" }} />
+        <LoadingOutlined
+          className="text-8xl h-full self-center"
+          style={{ color: "blue" }}
+        />
       </div>
     );
   }
@@ -48,17 +59,12 @@ export default function MainLayout({
             mode="vertical"
             items={items}
             selectedKeys={[pathname]}
+            onClick={({ key }) => {
+              if (key === "/logout") signOut({ callbackUrl: "/login" });
+            }}
           />
         </Sider>
         <Layout>
-          <Header>
-            <Button
-              type="link"
-              onClick={() => signOut({ callbackUrl: "/login" })}
-            >
-              Cerrar sesión
-            </Button>
-          </Header>
           <Content className="m-4">{children}</Content>
         </Layout>
       </Layout>

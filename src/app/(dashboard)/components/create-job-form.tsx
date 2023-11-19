@@ -10,7 +10,12 @@ type FieldType = {
   amount: string;
 };
 
-export default function CreateJobForm() {
+export default function CreateJobForm({
+  refreshJobs,
+}: {
+  refreshJobs: Function;
+}) {
+  const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const { data } = useSession({
     required: true,
@@ -22,14 +27,22 @@ export default function CreateJobForm() {
     setLoading(true);
     try {
       await createJob({ token: access_token, job: { rut, amount } });
+      await refreshJobs();
+      form.resetFields();
     } catch (error) {
+      console.error(error);
       // TODO: add error notification
     }
     setLoading(false);
   };
 
   return (
-    <Form layout="inline" onFinish={handleCreateJob}>
+    <Form
+      form={form}
+      layout="inline"
+      onFinish={handleCreateJob}
+      initialValues={{ rut: "", amount: "" }}
+    >
       <Form.Item<FieldType> label="Rut" name="rut" required>
         <Input disabled={loading} />
       </Form.Item>
