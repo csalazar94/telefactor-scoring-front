@@ -1,3 +1,5 @@
+import configuration from "@/config";
+
 export const getToken = async ({
   username,
   password,
@@ -5,7 +7,7 @@ export const getToken = async ({
   username?: string;
   password?: string;
 }) => {
-  const response = await fetch("http://localhost:3000/api/v1/auth/token", {
+  const response = await fetch(`${configuration.backend}/api/v1/auth/token`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -22,7 +24,7 @@ export const refreshToken = async ({
   refresh_token: string;
 }) => {
   const response = await fetch(
-    "http://localhost:3000/api/v1/auth/refresh-token",
+    `${configuration.backend}/api/v1/auth/refresh-token`,
     {
       method: "POST",
       body: JSON.stringify({

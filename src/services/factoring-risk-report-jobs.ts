@@ -1,6 +1,8 @@
+import configuration from "@/config";
+
 export const getJobs = async (token: string) => {
   const response = await fetch(
-    "http://localhost:3000/api/v1/report-builder/factoring-risk-report-jobs",
+    `${configuration.backend}/api/v1/report-builder/factoring-risk-report-jobs`,
     {
       method: "GET",
       headers: {
@@ -20,7 +22,7 @@ export const getJob = async ({
   jobId: string;
 }) => {
   const response = await fetch(
-    `http://localhost:3000/api/v1/report-builder/factoring-risk-report-jobs/${jobId}`,
+    `${configuration.backend}/api/v1/report-builder/factoring-risk-report-jobs/${jobId}`,
     {
       method: "GET",
       headers: {
@@ -40,7 +42,7 @@ export const createJob = async ({
   job: { rut: string; amount: string };
 }) => {
   const response = await fetch(
-    "http://localhost:3000/api/v1/report-builder/factoring-risk-report-jobs",
+    `${configuration.backend}/api/v1/report-builder/factoring-risk-report-jobs`,
     {
       method: "POST",
       headers: {
