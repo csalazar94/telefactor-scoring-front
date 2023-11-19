@@ -2,7 +2,7 @@
 
 import { getJob } from "@/services/factoring-risk-report-jobs";
 import { LoadingOutlined } from "@ant-design/icons";
-import { Modal } from "antd";
+import { Modal, notification } from "antd";
 import { useEffect, useState } from "react";
 import { Job } from "./jobs-table";
 import { useSession } from "next-auth/react";
@@ -19,22 +19,33 @@ export default function ReportModal({
   setShowModal,
 }: ReportModalProps) {
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [job, setJob] = useState<Job>();
-  const { data } = useSession({
+  const { data, status } = useSession({
     required: true,
   });
+  const [api, contextHolder] = notification.useNotification();
 
   const access_token = data!.access_token;
 
   useEffect(() => {
-    if (!access_token) return;
-    getJob({ token: access_token, jobId }).then((job) => {
-      setJob(job);
-      setLoading(false);
-    });
-  }, [access_token, jobId]);
+    setLoading(true);
+    getJob({ token: access_token, jobId })
+      .then((job) => {
+        setJob(job);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError(true);
+        setLoading(false);
+        api.error({
+          message: "Error",
+          description: "Ocurrió un error al obtener el reporte",
+        });
+      });
+  }, [access_token, jobId, api]);
 
-  if (loading) {
+  if (loading || status === "loading") {
     return (
       <Modal
         open={showModal}
@@ -49,6 +60,10 @@ export default function ReportModal({
         <LoadingOutlined style={{ color: "blue" }} className="text-8xl" />
       </Modal>
     );
+  }
+
+  if (error) {
+    return <>{contextHolder}</>;
   }
 
   return (

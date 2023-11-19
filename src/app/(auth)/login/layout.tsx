@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import MainLayout from "../components/main-layout";
 
 export const metadata: Metadata = {
-  title: "Login",
+  title: "Login - Telefactor",
   description: "Iniciar sesión",
 };
 
