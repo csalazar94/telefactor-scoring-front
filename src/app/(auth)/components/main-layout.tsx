@@ -28,7 +28,9 @@ export default function MainLayout({
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Content className="m-12">{children}</Content>
+      <Content className="flex justify-center content-center">
+        {children}
+      </Content>
     </Layout>
   );
 }

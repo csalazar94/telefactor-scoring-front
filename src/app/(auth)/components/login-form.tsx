@@ -27,29 +27,32 @@ export default function LoginForm() {
   };
 
   return (
-    <Form layout="vertical" onFinish={handleLogin}>
-      <Form.Item<LoginFieldType>
-        label="Usuario"
-        name="username"
-        validateStatus={error && "error"}
-      >
-        <Input disabled={loading} />
-      </Form.Item>
-      <Form.Item<LoginFieldType>
-        label="Contraseña"
-        name="password"
-        validateStatus={error && "error"}
-      >
-        <Input disabled={loading} />
-      </Form.Item>
-      {error && (
-        <div className="mb-4">
-          <Alert message={error} type="error" showIcon />
-        </div>
-      )}
-      <Button loading={loading} type="primary" htmlType="submit">
-        Ingresar
-      </Button>
-    </Form>
+    <div className="w-1/2 rounded-md bg-slate-50 h-full p-6 self-center flex flex-col gap-4">
+      <img src="/logo-telefactor.png" className="object-scale-down max-h-14" />
+      <Form layout="vertical" onFinish={handleLogin}>
+        <Form.Item<LoginFieldType>
+          label="Usuario"
+          name="username"
+          validateStatus={error && "error"}
+        >
+          <Input disabled={loading} />
+        </Form.Item>
+        <Form.Item<LoginFieldType>
+          label="Contraseña"
+          name="password"
+          validateStatus={error && "error"}
+        >
+          <Input type="password" disabled={loading} />
+        </Form.Item>
+        {error && (
+          <div className="mb-4">
+            <Alert message={error} type="error" showIcon />
+          </div>
+        )}
+        <Button loading={loading} type="primary" htmlType="submit">
+          Ingresar
+        </Button>
+      </Form>
+    </div>
   );
 }
