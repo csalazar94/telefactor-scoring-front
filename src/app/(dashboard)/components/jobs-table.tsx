@@ -52,6 +52,11 @@ export default function JobsTable({
     {
       title: "Fecha de creación",
       dataIndex: "createdAt",
+      render: (text: string) =>
+        new Intl.DateTimeFormat("es-CL", {
+          dateStyle: "medium",
+          timeStyle: "short",
+        }).format(new Date(text)),
     },
     {
       title: "Rut",

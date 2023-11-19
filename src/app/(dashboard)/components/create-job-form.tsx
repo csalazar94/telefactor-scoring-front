@@ -27,7 +27,10 @@ export default function CreateJobForm({
   const handleCreateJob = async ({ rut, amount }: FieldType) => {
     setLoading(true);
     try {
-      await createJob({ token: access_token, job: { rut, amount } });
+      await createJob({
+        token: access_token,
+        job: { rut: rut?.toUpperCase(), amount },
+      });
       await refreshJobs();
       form.resetFields();
       api.success({
