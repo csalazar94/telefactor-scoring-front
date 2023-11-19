@@ -2,7 +2,6 @@
 
 import { Alert, Button, Form, Input } from "antd";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type LoginFieldType = {
@@ -11,8 +10,6 @@ type LoginFieldType = {
 };
 
 export default function LoginForm() {
-  const router = useRouter();
-
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -23,9 +20,7 @@ export default function LoginForm() {
       password,
       redirect: false,
     });
-    if (res?.ok) {
-      router.push("/");
-    } else {
+    if (!res?.ok) {
       setError("Usuario y/o contraseña incorrecto.");
     }
     setLoading(false);
@@ -47,13 +42,12 @@ export default function LoginForm() {
       >
         <Input disabled={loading} />
       </Form.Item>
-      {error && <Alert message={error} type="error" showIcon />}
-      <Button
-        loading={loading}
-        type="primary"
-        htmlType="submit"
-        className="mt-4"
-      >
+      {error && (
+        <div className="mb-4">
+          <Alert message={error} type="error" showIcon />
+        </div>
+      )}
+      <Button loading={loading} type="primary" htmlType="submit">
         Ingresar
       </Button>
     </Form>

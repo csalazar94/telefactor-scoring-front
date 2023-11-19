@@ -1,4 +1,5 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
+import { decode } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions: NextAuthOptions = {
@@ -13,10 +14,41 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.access_token = user.access_token;
+        token.expires_at = user.expires_at;
+        token.refresh_token = user.refresh_token;
+      } else if (Date.now() < token.expires_at * 1000) {
+        return token;
+      } else {
+        try {
+          const res = await fetch(
+            "http://localhost:3000/api/v1/auth/refresh-token",
+            {
+              method: "POST",
+              body: JSON.stringify({
+                refresh_token: token.refresh_token,
+              }),
+              headers: { "Content-Type": "application/json" },
+            },
+          );
+
+          const tokens = await res.json();
+
+          if (!res.ok) throw tokens;
+
+          return {
+            ...token,
+            access_token: tokens.access_token,
+            expires_at: tokens.expires_at,
+            refresh_token: tokens.refresh_token,
+          };
+        } catch (error) {
+          return { ...token, error: "RefreshAccessTokenError" as const };
+        }
       }
       return token;
     },
     async session({ session, token }) {
+      session.error = token.error;
       session.access_token = token.access_token;
       return session;
     },
@@ -37,10 +69,10 @@ export const authOptions: NextAuthOptions = {
           }),
           headers: { "Content-Type": "application/json" },
         });
-        const { access_token } = await res.json();
+        const { access_token, refresh_token, expires_at } = await res.json();
 
         if (res.ok && access_token) {
-          return { access_token };
+          return { access_token, refresh_token, expires_at };
         }
 
         return null;
