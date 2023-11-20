@@ -27,7 +27,7 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="w-1/2 rounded-md bg-slate-50 h-full p-6 self-center flex flex-col gap-4 shadow-lg">
+    <div className="w-full mx-4 md:w-1/2 rounded-md bg-slate-50 h-full p-6 self-center flex flex-col gap-4 shadow-lg">
       <img src="/logo-telefactor.png" className="object-scale-down max-h-14" />
       <Form layout="vertical" onFinish={handleLogin}>
         <Form.Item<LoginFieldType>

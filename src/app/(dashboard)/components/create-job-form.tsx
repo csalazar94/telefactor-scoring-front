@@ -4,6 +4,7 @@ import { createJob } from "@/services/factoring-risk-report-jobs";
 import { Button, Form, Input, InputNumber, notification } from "antd";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import { useMediaQuery } from "react-responsive";
 
 type FieldType = {
   rut: string;
@@ -21,6 +22,7 @@ export default function CreateJobForm({
     required: true,
   });
   const [api, contextHolder] = notification.useNotification();
+  const isLessThanLg = useMediaQuery({ query: "(max-width: 992px)" });
 
   const access_token = data!.access_token;
 
@@ -51,7 +53,7 @@ export default function CreateJobForm({
   return (
     <Form
       form={form}
-      layout="inline"
+      layout={isLessThanLg ? "vertical" : "inline"}
       onFinish={handleCreateJob}
       initialValues={{ rut: "", amount: "" }}
     >
