@@ -53,7 +53,7 @@ export default function MainLayout({
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Layout>
-        <Sider collapsible>
+        <Sider collapsible collapsedWidth={50} breakpoint="md">
           <Menu
             theme="dark"
             mode="vertical"
