@@ -69,6 +69,8 @@ export default function JobsTable({
     {
       title: "Monto",
       dataIndex: ["input", "amount"],
+      render: (_: any, record: any) =>
+        `${record.input.amount}`.replace(/\B(?=(\d{3})+(?!\d))/g, "."),
     },
     {
       title: "Puntaje",
