@@ -44,6 +44,11 @@ export default function MainLayout({
           label:
             "Puntaje bancarizados sin deterioro vigente pero con deterioro últimos 3 meses",
         },
+        {
+          key: "/settings/score-bndndnd3ms",
+          label:
+            "Puntaje bancarizados sin deterioro vigente y sin deterioro últimos 3 meses",
+        },
       ],
     },
     {
