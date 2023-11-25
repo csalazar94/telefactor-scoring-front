@@ -3,7 +3,7 @@
 import { LoadingOutlined } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
 import { signOut, useSession } from "next-auth/react";
-import { redirect, usePathname } from "next/navigation";
+import { redirect, usePathname, useRouter } from "next/navigation";
 import type { MenuProps } from "antd";
 
 const { Sider, Content } = Layout;
@@ -20,6 +20,7 @@ export default function MainLayout({
     },
   });
   const pathname = usePathname();
+  const router = useRouter();
 
   const items: MenuProps["items"] = [
     {
@@ -27,7 +28,14 @@ export default function MainLayout({
       label: "Dashboard",
     },
     {
-      type: "divider",
+      key: "/settings",
+      label: "Configuración",
+      children: [
+        {
+          key: "/settings/score-categories",
+          label: "Categorías de puntaje",
+        },
+      ],
     },
     {
       key: "/logout",
@@ -50,17 +58,21 @@ export default function MainLayout({
     redirect("/login");
   }
 
+  const openKeys = "/" + pathname.split("/")[1];
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Layout>
         <Sider collapsible collapsedWidth={50} breakpoint="md">
           <Menu
             theme="dark"
-            mode="vertical"
+            mode="inline"
             items={items}
             selectedKeys={[pathname]}
+            defaultOpenKeys={[openKeys]}
             onClick={({ key }) => {
               if (key === "/logout") signOut({ callbackUrl: "/login" });
+              router.push(key);
             }}
           />
         </Sider>

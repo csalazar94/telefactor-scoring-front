@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import MainLayout from "../components/main-layout";
+import MainLayout from "./components/main-layout";
 
 export const metadata: Metadata = {
   title: "Dashboard - Telefactor",
