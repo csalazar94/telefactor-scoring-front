@@ -15,6 +15,8 @@ import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import type { Color } from "antd/es/color-picker";
 
+const { Title } = Typography;
+
 interface ScoreCategory {
   id: string;
   category: string;
@@ -286,19 +288,24 @@ export default function ScoreCategorySettings() {
   }, [refreshScoreCategories]);
 
   return (
-    <Form form={form} component={false}>
-      {contextHolder}
-      <Table
-        loading={loading}
-        components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
-        dataSource={scoreCategories}
-        columns={mergedColumns}
-        scroll={{ x: "max-content" }}
-      />
-    </Form>
+    <div>
+      <Title level={2} className="my-0">
+        Categorías de puntaje
+      </Title>
+      <Form form={form} component={false}>
+        {contextHolder}
+        <Table
+          loading={loading}
+          components={{
+            body: {
+              cell: EditableCell,
+            },
+          }}
+          dataSource={scoreCategories}
+          columns={mergedColumns}
+          scroll={{ x: "max-content" }}
+        />
+      </Form>
+    </div>
   );
 }

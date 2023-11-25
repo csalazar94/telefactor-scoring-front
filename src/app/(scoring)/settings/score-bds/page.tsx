@@ -13,6 +13,8 @@ import {
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 
+const { Title } = Typography;
+
 interface ScoreBD {
   id: string;
   salesSegment: string;
@@ -190,19 +192,24 @@ export default function ScoreBDSettings() {
   }, [refreshScores]);
 
   return (
-    <Form form={form} component={false}>
-      {contextHolder}
-      <Table
-        loading={loading}
-        components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
-        dataSource={scores}
-        columns={mergedColumns}
-        scroll={{ x: "max-content" }}
-      />
-    </Form>
+    <div>
+      <Title level={2} className="my-0">
+        Puntaje bancarizados con deterioro
+      </Title>
+      <Form form={form} component={false}>
+        {contextHolder}
+        <Table
+          loading={loading}
+          components={{
+            body: {
+              cell: EditableCell,
+            },
+          }}
+          dataSource={scores}
+          columns={mergedColumns}
+          scroll={{ x: "max-content" }}
+        />
+      </Form>
+    </div>
   );
 }
