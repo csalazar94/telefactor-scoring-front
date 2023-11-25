@@ -94,3 +94,50 @@ export const updateScoreBD = async ({
     throw new Error("Error updating score banked and defaulter");
   return response.json();
 };
+
+export const getScoreBNDD3Ms = async ({ token }: { token: string }) => {
+  const response = await fetch(
+    `${configuration.backend}/api/v1/report-builder/score-bndd3ms`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  if (!response.ok)
+    throw new Error(
+      "Error obtaining score banked not defaulting now but defaulting last 3 months",
+    );
+  return response.json();
+};
+
+export const updateScoreBNDD3M = async ({
+  token,
+  id,
+  data,
+}: {
+  token: string;
+  id: string;
+  data: {
+    salesSegment: string;
+    score: number;
+  };
+}) => {
+  const response = await fetch(
+    `${configuration.backend}/api/v1/report-builder/score-bndd3ms/${id}`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    },
+  );
+  if (!response.ok)
+    throw new Error(
+      "Error updating score banked not defaulting now but defaulting last 3 months",
+    );
+  return response.json();
+};

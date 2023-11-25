@@ -39,6 +39,11 @@ export default function MainLayout({
           key: "/settings/score-bds",
           label: "Puntaje bancarizados con deterioro",
         },
+        {
+          key: "/settings/score-bndd3ms",
+          label:
+            "Puntaje bancarizados sin deterioro vigente pero con deterioro últimos 3 meses",
+        },
       ],
     },
     {
