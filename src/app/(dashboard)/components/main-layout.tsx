@@ -35,6 +35,10 @@ export default function MainLayout({
           key: "/settings/score-categories",
           label: "Categorías de puntaje",
         },
+        {
+          key: "/settings/score-bds",
+          label: "Puntaje bancarizados con deterioro",
+        },
       ],
     },
     {

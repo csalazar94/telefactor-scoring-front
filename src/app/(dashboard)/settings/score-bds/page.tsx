@@ -1,8 +1,7 @@
 "use client";
 
-import { getScoreCategories, updateScoreCategory } from "@/services/settings";
+import { getScoreBDs, updateScoreBD } from "@/services/settings";
 import {
-  ColorPicker,
   Form,
   Input,
   InputNumber,
@@ -13,35 +12,24 @@ import {
 } from "antd";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
-import type { Color } from "antd/es/color-picker";
 
-interface ScoreCategory {
+interface ScoreBD {
   id: string;
-  category: string;
-  minScore: number;
-  maxScore: number;
-  capacity: string;
-  behavior: string;
-  liquidity: string;
-  leverage: string;
-  judgement: string;
-  maxAmountFactor: number;
-  interestRate: number;
-  financedAmount: number;
-  color: string | Color;
+  salesSegment: string;
+  score: number;
 }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
   title: any;
-  record: ScoreCategory;
-  inputType: "text" | "number" | "color";
+  record: ScoreBD;
+  inputType: "text" | "number";
   children: React.ReactNode;
 }
 
-export default function ScoreCategorySettings() {
+export default function ScoreBDSettings() {
   const [form] = Form.useForm();
-  const [scoreCategories, setScoreCategories] = useState([]);
+  const [scores, setScores] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState("");
   const { data } = useSession({
@@ -51,19 +39,17 @@ export default function ScoreCategorySettings() {
 
   const access_token = data!.access_token;
 
-  const refreshScoreCategories = useCallback(async () => {
+  const refreshScores = useCallback(async () => {
     setLoading(true);
     try {
-      const scoreCategories = await getScoreCategories({
+      const scores = await getScoreBDs({
         token: access_token,
       });
-      setScoreCategories(
-        scoreCategories.map((sc: ScoreCategory) => ({ key: sc.id, ...sc })),
-      );
+      setScores(scores.map((s: ScoreBD) => ({ key: s.id, ...s })));
     } catch (error) {
       api.error({
         message: "Error",
-        description: "Ocurrió un error al obtener las categorías de puntaje",
+        description: "Ocurrió un error al obtener los puntajes",
       });
     }
     setLoading(false);
@@ -79,14 +65,7 @@ export default function ScoreCategorySettings() {
     ...restProps
   }) => {
     const inputForm =
-      inputType === "text" ? (
-        <Input />
-      ) : inputType === "number" ? (
-        <InputNumber stringMode />
-      ) : (
-        <ColorPicker showText disabledAlpha />
-      );
-
+      inputType === "text" ? <Input /> : <InputNumber stringMode />;
     return (
       <td {...restProps}>
         {editing ? (
@@ -109,7 +88,7 @@ export default function ScoreCategorySettings() {
     );
   };
 
-  const edit = (record: ScoreCategory) => {
+  const edit = (record: ScoreBD) => {
     form.setFieldsValue({ ...record });
     setEditingId(record.id);
   };
@@ -120,118 +99,43 @@ export default function ScoreCategorySettings() {
 
   const save = async (id: string) => {
     try {
-      const row = (await form.validateFields()) as ScoreCategory;
-      row.color =
-        typeof row.color === "string" ? row.color : row.color.toHexString();
-      await updateScoreCategory({ token: access_token, id, data: row });
+      const row = (await form.validateFields()) as ScoreBD;
+      await updateScoreBD({ token: access_token, id, data: row });
       api.success({
         message: "Edición exitosa",
-        description: "Se editó exitosamente la categoría de puntaje",
+        description: "Se editó exitosamente el puntaje",
       });
     } catch (error) {
       api.error({
         message: "Error",
-        description: "Ocurrió un error al editar la categoría de puntaje",
+        description: "Ocurrió un error al editar el puntaje",
       });
     } finally {
       setEditingId("");
-      await refreshScoreCategories();
+      await refreshScores();
     }
   };
 
   const columns = [
     {
-      title: "Categoría",
-      dataIndex: "category",
+      title: "Tramo de ventas",
+      dataIndex: "salesSegment",
       width: 200,
       editable: true,
       inputType: "text",
     },
     {
-      title: "Desde",
-      dataIndex: "minScore",
+      title: "Puntaje",
+      dataIndex: "score",
       width: 200,
       editable: true,
       inputType: "number",
-    },
-    {
-      title: "Hasta",
-      dataIndex: "maxScore",
-      width: 200,
-      editable: true,
-      inputType: "number",
-    },
-    {
-      title: "Capacidad",
-      dataIndex: "capacity",
-      width: 200,
-      editable: true,
-      inputType: "text",
-    },
-    {
-      title: "Comportamiento",
-      dataIndex: "behavior",
-      width: 200,
-      editable: true,
-      inputType: "text",
-    },
-    {
-      title: "Liquidez",
-      dataIndex: "liquidity",
-      width: 200,
-      editable: true,
-      inputType: "text",
-    },
-    {
-      title: "Apalancamiento",
-      dataIndex: "leverage",
-      width: 200,
-      editable: true,
-      inputType: "text",
-    },
-    {
-      title: "Opinión",
-      dataIndex: "judgement",
-      width: 200,
-      editable: true,
-      inputType: "text",
-    },
-    {
-      title: "Factor de máxima exposición",
-      dataIndex: "maxAmountFactor",
-      width: 200,
-      editable: true,
-      inputType: "number",
-    },
-    {
-      title: "Tasa de interés",
-      dataIndex: "interestRate",
-      width: 200,
-      editable: true,
-      inputType: "number",
-    },
-    {
-      title: "Porcentaje financiado",
-      dataIndex: "financedPercentage",
-      width: 200,
-      editable: true,
-      inputType: "number",
-    },
-    {
-      title: "Color",
-      dataIndex: "color",
-      width: 200,
-      editable: true,
-      inputType: "color",
-      render: (_: any, record: ScoreCategory) => {
-        return <ColorPicker showText value={record.color} disabled />;
-      },
     },
     {
       title: "Acción",
       dataIndex: "action",
       width: 200,
-      render: (_: any, record: ScoreCategory) => {
+      render: (_: any, record: ScoreBD) => {
         if (record.id === editingId) {
           return (
             <span>
@@ -270,7 +174,7 @@ export default function ScoreCategorySettings() {
     }
     return {
       ...col,
-      onCell: (record: ScoreCategory) => ({
+      onCell: (record: ScoreBD) => ({
         record,
         dataIndex: col.dataIndex,
         title: col.title,
@@ -281,9 +185,9 @@ export default function ScoreCategorySettings() {
   });
 
   useEffect(() => {
-    refreshScoreCategories();
-    return setScoreCategories([]);
-  }, [refreshScoreCategories]);
+    refreshScores();
+    return setScores([]);
+  }, [refreshScores]);
 
   return (
     <Form form={form} component={false}>
@@ -295,7 +199,7 @@ export default function ScoreCategorySettings() {
             cell: EditableCell,
           },
         }}
-        dataSource={scoreCategories}
+        dataSource={scores}
         columns={mergedColumns}
         scroll={{ x: "max-content" }}
       />
