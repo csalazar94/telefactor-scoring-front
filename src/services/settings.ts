@@ -188,3 +188,44 @@ export const updateScoreBNDNDND3M = async ({
     );
   return response.json();
 };
+
+export const getScoreUs = async ({ token }: { token: string }) => {
+  const response = await fetch(
+    `${configuration.backend}/api/v1/report-builder/score-us`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  if (!response.ok) throw new Error("Error obtaining score unbanked");
+  return response.json();
+};
+
+export const updateScoreU = async ({
+  token,
+  id,
+  data,
+}: {
+  token: string;
+  id: string;
+  data: {
+    salesSegment: string;
+    score: number;
+  };
+}) => {
+  const response = await fetch(
+    `${configuration.backend}/api/v1/report-builder/score-us/${id}`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    },
+  );
+  if (!response.ok) throw new Error("Error updating score unbanked");
+  return response.json();
+};
