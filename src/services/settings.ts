@@ -229,3 +229,52 @@ export const updateScoreU = async ({
   if (!response.ok) throw new Error("Error updating score unbanked");
   return response.json();
 };
+
+export const getScoreBWDNDND3Ms = async ({ token }: { token: string }) => {
+  const response = await fetch(
+    `${configuration.backend}/api/v1/report-builder/score-bwdndnd3ms`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+  if (!response.ok)
+    throw new Error(
+      "Error obtaining score banked with debt, without defaulting now neither last 3 months",
+    );
+  return response.json();
+};
+
+export const updateScoreBWDNDND3M = async ({
+  token,
+  id,
+  data,
+}: {
+  token: string;
+  id: string;
+  data: {
+    salesSegment: string;
+    minLeverage: number;
+    maxLeverage: number;
+    score: number;
+  };
+}) => {
+  const response = await fetch(
+    `${configuration.backend}/api/v1/report-builder/score-bwdndnd3ms/${id}`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    },
+  );
+  if (!response.ok)
+    throw new Error(
+      "Error updating score banked with debt, not defaulting now neither last 3 months",
+    );
+  return response.json();
+};

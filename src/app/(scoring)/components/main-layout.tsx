@@ -47,11 +47,16 @@ export default function MainLayout({
         {
           key: "/settings/score-bndndnd3ms",
           label:
-            "Puntaje bancarizados sin deterioro vigente y sin deterioro últimos 3 meses",
+            "Puntaje bancarizados sin deuda sin deterioro vigente y sin deterioro últimos 3 meses",
         },
         {
           key: "/settings/score-us",
           label: "Puntaje no bancarizados",
+        },
+        {
+          key: "/settings/score-bwdndnd3ms",
+          label:
+            "Puntaje bancarizados con deuda sin deterioro vigente y sin deterioro últimos 3 meses",
         },
       ],
     },
