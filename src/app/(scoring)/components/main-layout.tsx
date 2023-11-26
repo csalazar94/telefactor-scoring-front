@@ -28,6 +28,10 @@ export default function MainLayout({
       label: "Dashboard",
     },
     {
+      key: "/rate-simulator",
+      label: "Simulador de tasa",
+    },
+    {
       key: "/settings",
       label: "Configuración",
       children: [
