@@ -50,6 +50,7 @@ export default function ScoreUSettings() {
       setScores(
         scores.map((s: ScoreU) => ({
           key: s.id,
+          id: s.id,
           salesSegment: s.salesSegment,
           score: String(s.score),
         })),

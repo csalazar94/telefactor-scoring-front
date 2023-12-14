@@ -50,6 +50,7 @@ export default function ScoreBNDNDND3MSettings() {
       setScores(
         scores.map((s: ScoreBNDNDND3M) => ({
           key: s.id,
+          id: s.id,
           salesSegment: s.salesSegment,
           score: String(s.score),
         })),

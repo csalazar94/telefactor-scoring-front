@@ -49,6 +49,7 @@ export default function ScoreBDSettings() {
       });
       setScores(scores.map((s: ScoreBD) => ({
         key: s.id,
+        id: s.id,
         salesSegment: s.salesSegment,
         score: String(s.score),
       })));

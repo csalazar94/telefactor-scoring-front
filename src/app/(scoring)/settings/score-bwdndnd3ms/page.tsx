@@ -52,6 +52,7 @@ export default function ScoreBWDNDND3MSettings() {
       setScores(
         scores.map((s: ScoreBWDNDND3M) => ({
           key: s.id,
+          id: s.id,
           salesSegment: s.salesSegment,
           minLeverage: String(s.minLeverage),
           maxLeverage: String(s.maxLeverage),

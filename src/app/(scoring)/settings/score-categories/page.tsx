@@ -62,6 +62,7 @@ export default function ScoreCategorySettings() {
       setScoreCategories(
         scoreCategories.map((sc: ScoreCategory) => ({
           key: sc.id,
+          id: sc.id,
           category: sc.category,
           minScore: String(sc.minScore),
           maxScore: String(sc.maxScore),
