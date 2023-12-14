@@ -47,7 +47,11 @@ export default function ScoreBDSettings() {
       const scores = await getScoreBDs({
         token: access_token,
       });
-      setScores(scores.map((s: ScoreBD) => ({ key: s.id, ...s })));
+      setScores(scores.map((s: ScoreBD) => ({
+        key: s.id,
+        salesSegment: s.salesSegment,
+        score: String(s.score),
+      })));
     } catch (error) {
       api.error({
         message: "Error",

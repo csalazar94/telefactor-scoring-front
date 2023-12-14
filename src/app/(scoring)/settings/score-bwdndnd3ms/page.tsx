@@ -49,7 +49,15 @@ export default function ScoreBWDNDND3MSettings() {
       const scores = await getScoreBWDNDND3Ms({
         token: access_token,
       });
-      setScores(scores.map((s: ScoreBWDNDND3M) => ({ key: s.id, ...s })));
+      setScores(
+        scores.map((s: ScoreBWDNDND3M) => ({
+          key: s.id,
+          salesSegment: s.salesSegment,
+          minLeverage: String(s.minLeverage),
+          maxLeverage: String(s.maxLeverage),
+          score: String(s.score),
+        })),
+      );
     } catch (error) {
       api.error({
         message: "Error",

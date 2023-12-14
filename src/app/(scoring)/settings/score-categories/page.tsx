@@ -60,7 +60,21 @@ export default function ScoreCategorySettings() {
         token: access_token,
       });
       setScoreCategories(
-        scoreCategories.map((sc: ScoreCategory) => ({ key: sc.id, ...sc })),
+        scoreCategories.map((sc: ScoreCategory) => ({
+          key: sc.id,
+          category: sc.category,
+          minScore: String(sc.minScore),
+          maxScore: String(sc.maxScore),
+          capacity: sc.capacity,
+          behavior: sc.behavior,
+          liquidity: sc.liquidity,
+          leverage: sc.leverage,
+          judgement: sc.judgement,
+          maxAmountFactor: String(sc.maxAmountFactor),
+          interestRate: String(sc.interestRate),
+          financedAmount: String(sc.financedAmount),
+          color: sc.color,
+        })),
       );
     } catch (error) {
       api.error({

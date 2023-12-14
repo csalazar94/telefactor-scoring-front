@@ -47,7 +47,13 @@ export default function ScoreUSettings() {
       const scores = await getScoreUs({
         token: access_token,
       });
-      setScores(scores.map((s: ScoreU) => ({ key: s.id, ...s })));
+      setScores(
+        scores.map((s: ScoreU) => ({
+          key: s.id,
+          salesSegment: s.salesSegment,
+          score: String(s.score),
+        })),
+      );
     } catch (error) {
       api.error({
         message: "Error",
