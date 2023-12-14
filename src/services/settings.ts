@@ -33,7 +33,7 @@ export const updateScoreCategory = async ({
     judgement: string;
     maxAmountFactor: number;
     interestRate: number;
-    financedAmount: number;
+    financedPercentage: number;
     color: string | Color;
   };
 }) => {

@@ -29,7 +29,7 @@ interface ScoreCategory {
   judgement: string;
   maxAmountFactor: number;
   interestRate: number;
-  financedAmount: number;
+  financedPercentage: number;
   color: string | Color;
 }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
@@ -73,7 +73,7 @@ export default function ScoreCategorySettings() {
           judgement: sc.judgement,
           maxAmountFactor: String(sc.maxAmountFactor),
           interestRate: String(sc.interestRate),
-          financedAmount: String(sc.financedAmount),
+          financedPercentage: String(sc.financedPercentage),
           color: sc.color,
         })),
       );
