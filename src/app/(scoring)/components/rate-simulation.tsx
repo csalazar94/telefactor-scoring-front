@@ -6,11 +6,11 @@ export default function RateSimulation({
   rateSimulation:
     | {
         amountFinanced: number;
+        percentageFinanced: number;
         amountReceived: number;
         interestRate: number;
         paymentTermDays: number;
         retentionAmount: number;
-        score: number;
         totalCost: number;
       }
     | undefined;
@@ -32,6 +32,14 @@ export default function RateSimulation({
     },
     {
       key: 3,
+      label: "Porcentaje financiado",
+      children: new Intl.NumberFormat("es-CL", {
+        style: "percent",
+        minimumSignificantDigits: 3,
+      }).format(rateSimulation?.percentageFinanced || 0),
+    },
+    {
+      key: 4,
       label: "Tasa de interés",
       children: new Intl.NumberFormat("es-CL", {
         style: "percent",
@@ -39,31 +47,24 @@ export default function RateSimulation({
       }).format(rateSimulation?.interestRate || 0),
     },
     {
-      key: 4,
+      key: 5,
       label: "Plazo en días",
       children: new Intl.NumberFormat("es-CL").format(
         rateSimulation?.paymentTermDays || 0,
       ),
     },
     {
-      key: 5,
+      key: 6,
       label: "Monto retención",
       children: new Intl.NumberFormat("es-CL").format(
         rateSimulation?.retentionAmount || 0,
       ),
     },
     {
-      key: 6,
+      key: 7,
       label: "Costo total",
       children: new Intl.NumberFormat("es-CL").format(
         rateSimulation?.totalCost || 0,
-      ),
-    },
-    {
-      key: 7,
-      label: "Puntaje",
-      children: new Intl.NumberFormat("es-CL").format(
-        rateSimulation?.score || 0,
       ),
     },
   ];
