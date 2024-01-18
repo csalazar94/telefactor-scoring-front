@@ -13,7 +13,6 @@ import {
 } from "antd";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
-import type { Color } from "antd/es/color-picker";
 
 const { Title } = Typography;
 
@@ -30,14 +29,13 @@ interface ScoreCategory {
   maxAmountFactor: number;
   interestRate: number;
   financedPercentage: number;
-  color: string | Color;
 }
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
   title: any;
   record: ScoreCategory;
-  inputType: "text" | "number" | "color";
+  inputType: "text" | "number";
   children: React.ReactNode;
 }
 
@@ -74,7 +72,6 @@ export default function ScoreCategorySettings() {
           maxAmountFactor: String(sc.maxAmountFactor),
           interestRate: String(sc.interestRate),
           financedPercentage: String(sc.financedPercentage),
-          color: sc.color,
         })),
       );
     } catch (error) {
@@ -96,13 +93,7 @@ export default function ScoreCategorySettings() {
     ...restProps
   }) => {
     const inputForm =
-      inputType === "text" ? (
-        <Input />
-      ) : inputType === "number" ? (
-        <InputNumber stringMode />
-      ) : (
-        <ColorPicker showText disabledAlpha />
-      );
+      inputType === "text" ? <Input /> : <InputNumber stringMode />;
 
     return (
       <td {...restProps}>
@@ -138,8 +129,6 @@ export default function ScoreCategorySettings() {
   const save = async (id: string) => {
     try {
       const row = (await form.validateFields()) as ScoreCategory;
-      row.color =
-        typeof row.color === "string" ? row.color : row.color.toHexString();
       await updateScoreCategory({ token: access_token, id, data: row });
       api.success({
         message: "Edición exitosa",
@@ -233,16 +222,6 @@ export default function ScoreCategorySettings() {
       width: 200,
       editable: true,
       inputType: "number",
-    },
-    {
-      title: "Color",
-      dataIndex: "color",
-      width: 200,
-      editable: true,
-      inputType: "color",
-      render: (_: any, record: ScoreCategory) => {
-        return <ColorPicker showText value={record.color} disabled />;
-      },
     },
     {
       title: "Acción",
