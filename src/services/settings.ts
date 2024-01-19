@@ -278,3 +278,61 @@ export const updateScoreBWDNDND3M = async ({
     );
   return response.json();
 };
+
+export const getRateSimulationScores = async ({
+  token,
+  page,
+  size,
+  rut,
+}: {
+  token: string;
+  page: number;
+  size: number;
+  rut: string | undefined;
+}) => {
+  const queryParams = new URLSearchParams({
+    page: String(page),
+    size: String(size),
+    ...(rut ? { rut } : {}),
+  });
+  const response = await fetch(
+    `${configuration.backend}/api/v1/rate-calculator/scores?${queryParams}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    },
+  );
+  const responseData = await response.json();
+  if (!response.ok) throw new Error("Error getting scores");
+  return responseData;
+};
+
+export const putRateSimulationScores = async ({
+  token,
+  data,
+}: {
+  token: string;
+  data: any;
+}) => {
+  const response = await fetch(
+    `${configuration.backend}/api/v1/rate-calculator/scores`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: data,
+    },
+  );
+  const responseData = await response.json();
+  if (!response.ok) {
+    if (responseData.message) {
+      throw new Error(responseData.message);
+    }
+    throw new Error("Error putting scores");
+  }
+  return responseData;
+};

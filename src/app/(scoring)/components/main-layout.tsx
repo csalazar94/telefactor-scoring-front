@@ -62,6 +62,11 @@ export default function MainLayout({
           label:
             "Puntaje bancarizados con deuda sin deterioro vigente y sin deterioro últimos 3 meses",
         },
+        {
+          key: "/settings/rate-simulation-scores",
+          label:
+            "Puntajes para simulaciones de tasas",
+        },
       ],
     },
     {
