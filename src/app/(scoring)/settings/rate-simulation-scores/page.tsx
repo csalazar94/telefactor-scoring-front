@@ -19,7 +19,9 @@ import {
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import { SearchOutlined, UploadOutlined } from "@ant-design/icons";
-import { RcFile } from 'rc-upload/lib/interface';
+import { RcFile } from "rc-upload/lib/interface";
+import type { FilterDropdownProps } from "antd/es/table/interface";
+import type { TableColumnType } from "antd";
 
 const { Title } = Typography;
 
@@ -89,8 +91,8 @@ export default function RateSimulationScoresSettings() {
 
   const handleReset = (
     clearFilters: () => void,
-    close: Function,
-    confirm: Function,
+    close: FilterDropdownProps["close"],
+    confirm: FilterDropdownProps["confirm"],
   ) => {
     clearFilters();
     setRut("");
@@ -99,7 +101,7 @@ export default function RateSimulationScoresSettings() {
     close();
   };
 
-  const columns = [
+  const columns: TableColumnType<RateSimulationScore>[] = [
     {
       title: "Rut",
       dataIndex: "rut",
@@ -110,12 +112,6 @@ export default function RateSimulationScoresSettings() {
         confirm,
         clearFilters,
         close,
-      }: {
-        setSelectedKeys: Function;
-        selectedKeys: React.Key[];
-        confirm: Function;
-        clearFilters: () => void;
-        close: Function;
       }) => (
         <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
           <Input

@@ -34,7 +34,6 @@ export const updateScoreCategory = async ({
     maxAmountFactor: number;
     interestRate: number;
     financedPercentage: number;
-    color: string | Color;
   };
 }) => {
   const response = await fetch(
