@@ -19,6 +19,7 @@ import {
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import { SearchOutlined, UploadOutlined } from "@ant-design/icons";
+import { RcFile } from 'rc-upload/lib/interface';
 
 const { Title } = Typography;
 
@@ -39,7 +40,7 @@ export default function RateSimulationScoresSettings() {
   const [rut, setRut] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [fileList, setFileList] = useState([]);
+  const [fileList, setFileList] = useState<RcFile[]>([]);
   const { data } = useSession({
     required: true,
   });
@@ -167,7 +168,6 @@ export default function RateSimulationScoresSettings() {
   const handleUpload = async () => {
     const formData = new FormData();
     fileList.forEach((file) => {
-      console.log(file);
       formData.append("file", file);
     });
     setUploading(true);
@@ -175,11 +175,11 @@ export default function RateSimulationScoresSettings() {
       await putRateSimulationScores({ token: access_token, data: formData });
       message.success("Archivo subido correctamente.");
       await refreshRateSimulationScores(pagination.page, pagination.size);
-    } catch (error) {
-      if (error.message === "Error putting scores") {
+    } catch (error: any) {
+      if (error?.message === "Error putting scores") {
         message.error("Ocurrió un error al subir el archivo");
       } else {
-        message.error(error.message);
+        message.error(error?.message);
       }
     } finally {
       setFileList([]);
@@ -200,13 +200,11 @@ export default function RateSimulationScoresSettings() {
         beforeUpload={(file) => {
           setFileList([...fileList, file]);
         }}
-        customRequest={async ({ onSuccess, onError }) => {
-          try {
-            await handleUpload();
-            onSuccess("Ok");
-          } catch (error) {
-            onError(error);
-          }
+        customRequest={(options) => {
+          const { onSuccess, onError } = options;
+          handleUpload()
+            .then(() => onSuccess && onSuccess("Ok"))
+            .catch((error) => onError && onError(error));
         }}
       >
         <Button loading={uploading} icon={<UploadOutlined />}>
