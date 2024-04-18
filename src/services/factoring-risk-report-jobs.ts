@@ -1,8 +1,12 @@
 import configuration from "@/config";
 
-export const getJobs = async (token: string) => {
+export const getJobs = async (token: string, page: number, size: number) => {
+  const queryParams = new URLSearchParams({
+    page: String(page),
+    size: String(size),
+  });
   const response = await fetch(
-    `${configuration.backend}/api/v1/report-builder/factoring-risk-report-jobs`,
+    `${configuration.backend}/api/v1/report-builder/factoring-risk-report-jobs?${queryParams}`,
     {
       method: "GET",
       headers: {

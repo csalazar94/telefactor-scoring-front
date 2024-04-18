@@ -5,6 +5,13 @@ import { Button, Table } from "antd";
 import { useState } from "react";
 import ReportModal from "./report-modal";
 
+export type JobResponse = {
+  data: Job[];
+  page: number;
+  size: number;
+  total: number;
+};
+
 export type Job = {
   id: string;
   clientId: string;
@@ -105,6 +112,7 @@ export default function JobsTable({
         loading={loadingJobs}
         dataSource={jobs}
         columns={columns}
+        pagination={false}
       />
       {showModal && jobId ? (
         <ReportModal

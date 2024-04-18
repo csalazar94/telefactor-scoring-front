@@ -2,13 +2,18 @@
 
 import { useSession } from "next-auth/react";
 import CreateJobForm from "../components/create-job-form";
-import JobsTable, { Job } from "../components/jobs-table";
+import JobsTable, { Job, JobResponse } from "../components/jobs-table";
 import { useCallback, useEffect, useState } from "react";
 import { getJobs } from "@/services/factoring-risk-report-jobs";
-import { notification } from "antd";
+import { Pagination, notification } from "antd";
 import Refresh from "../components/refresh";
 
 export default function Dashboard() {
+  const [pagination, setPagination] = useState({
+    page: 1,
+    size: 10,
+    total: 0,
+  });
   const [jobs, setJobs] = useState<Job[]>([]);
   const [secondsToRefresh, setSecondsToRefresh] = useState(15);
   const [timer, setTimer] = useState<NodeJS.Timeout>();
@@ -23,8 +28,17 @@ export default function Dashboard() {
   const refreshJobs = useCallback(async () => {
     setLoadingJobs(true);
     try {
-      const jobs = await getJobs(access_token);
-      setJobs(jobs.map((j: Job) => ({ ...j, key: j.id })));
+      const jobs = (await getJobs(
+        access_token,
+        pagination.page,
+        pagination.size,
+      )) as JobResponse;
+      setJobs(jobs.data.map((j: Job) => ({ ...j, key: j.id })));
+      setPagination({
+        page: jobs.page,
+        size: jobs.size,
+        total: jobs.total,
+      });
     } catch (error) {
       api.error({
         message: "Error",
@@ -32,7 +46,7 @@ export default function Dashboard() {
       });
     }
     setLoadingJobs(false);
-  }, [access_token, api]);
+  }, [access_token, api, pagination.page, pagination.size]);
 
   useEffect(() => {
     refreshJobs();
@@ -80,6 +94,20 @@ export default function Dashboard() {
         loadingJobs={loadingJobs}
       />
       <JobsTable jobs={jobs} loadingJobs={loadingJobs} />
+      <Pagination
+        disabled={loadingJobs}
+        style={{ alignSelf: "flex-end" }}
+        current={pagination.page}
+        pageSize={pagination.size}
+        total={pagination.total}
+        onChange={(page, pageSize) =>
+          setPagination({
+            page: page,
+            size: pageSize,
+            total: 0,
+          })
+        }
+      />
     </div>
   );
 }
