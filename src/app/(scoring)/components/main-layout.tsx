@@ -64,8 +64,11 @@ export default function MainLayout({
         },
         {
           key: "/settings/rate-simulation-scores",
-          label:
-            "Puntajes para simulaciones de tasas",
+          label: "Puntajes para simulaciones de tasas",
+        },
+        {
+          key: "/settings/sales-amounts",
+          label: "Ventas mensuales",
         },
       ],
     },

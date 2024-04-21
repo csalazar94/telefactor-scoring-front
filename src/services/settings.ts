@@ -335,3 +335,49 @@ export const putRateSimulationScores = async ({
   }
   return responseData;
 };
+
+export const getSalesAmounts = async ({ token }: { token: string }) => {
+  const response = await fetch(
+    `${configuration.backend}/api/v1/report-builder/sales-amounts`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    },
+  );
+  const responseData = await response.json();
+  if (!response.ok) throw new Error("Error getting sales amounts");
+  return responseData;
+};
+
+export const updateSalesAmount = async ({
+  token,
+  id,
+  data,
+}: {
+  token: string;
+  id: string;
+  data: any;
+}) => {
+  const response = await fetch(
+    `${configuration.backend}/api/v1/report-builder/sales-amounts/${id}`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    },
+  );
+  const responseData = await response.json();
+  if (!response.ok) {
+    if (responseData.message) {
+      throw new Error(responseData.message);
+    }
+    throw new Error("Error updating sales amount");
+  }
+  return responseData;
+};
